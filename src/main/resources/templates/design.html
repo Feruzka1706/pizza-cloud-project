@@ -16,23 +16,24 @@
     <br>
 
     <h1>Design your pizza!</h1>
-    <img th:src="@{/images/pizza.png}"/>
+    <img th:src="@{/images/pizza.png}" style="width: 500px; height: 500px"/>
 
-    <form th:action="@{/design}" method="post">
+    <form th:action="@{/createPizza}" method="post" >
+
 
         <div class="row">
             <div class="col-xl-4 col-lg-4 col-md-4">
                 <h3>Select Cheese:</h3>
                 <div th:each="cheese : ${cheeses}">
-                    <input th:field="*{cheeseList}" type="checkbox"
+                    <input th:field="*{cheeses}" type="checkbox"
                            th:value="${cheese}"/>
                     <span th:text="${cheese}"></span><br/>
                 </div>
             </div>
             <div class="col-xl-4 col-lg-4 col-md-4">
                 <h3>Select Sauce:</h3>
-                <div>
-                    <input th:field="*{sauceList}" type="checkbox"
+                <div th:each="sauce : ${sauces}">
+                    <input th:field="*{sauces}" type="checkbox"
                            th:value="${sauce}"/>
                     <span th:text="${sauce}"></span><br/>
                 </div>
@@ -40,7 +41,7 @@
             <div class="col-xl-4 col-lg-4 col-md-4">
                 <h3>Select Topping:</h3>
                 <div th:each="topping : ${toppings}">
-                    <input th:field="#{toppingList}" type="checkbox"
+                    <input th:field="*{toppings}" type="checkbox"
                            th:value="${topping}"/>
                     <span th:text="${topping}"></span><br/>
                 </div>
