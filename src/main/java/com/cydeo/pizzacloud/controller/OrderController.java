@@ -1,5 +1,6 @@
 package com.cydeo.pizzacloud.controller;
 
+import com.cydeo.pizzacloud.exception.PizzaNotFoundException;
 import com.cydeo.pizzacloud.model.Pizza;
 import com.cydeo.pizzacloud.model.PizzaOrder;
 import com.cydeo.pizzacloud.repository.PizzaRepository;
@@ -8,6 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import javax.websocket.server.PathParam;
 import java.util.NoSuchElementException;
 import java.util.UUID;
 
@@ -22,12 +24,12 @@ public class OrderController {
     }
 
     @GetMapping("/current")
-    public String orderForm( @RequestParam(name = "pizzaId") String pizzaId, Model model) {
+    public String orderForm( @RequestParam(name = "pizzaId") UUID pizzaId, Model model) {
 
         PizzaOrder pizzaOrder = new PizzaOrder();
 
         // Fix the getPizza method below in line 49.
-        pizzaOrder.setPizza(getPizza(UUID.fromString(pizzaId)));
+        pizzaOrder.setPizza(getPizza(pizzaId));
 
         model.addAttribute("pizzaOrder", pizzaOrder);
 
@@ -35,16 +37,16 @@ public class OrderController {
     }
 
 
-    @PostMapping
-    public String processOrder(@RequestParam(value = "pizzaId") String pizzaId,
+    @PostMapping("/{pizzaId}")
+    public String processOrder(@PathVariable(value = "pizzaId") UUID pizzaId,
                                @ModelAttribute("pizzaOrder") PizzaOrder pizzaOrder, Model model) {
         // Set the pizza before saving it
-        pizzaOrder.setPizza(getPizza(UUID.fromString(pizzaId)));
+        pizzaOrder.setPizza(getPizza(pizzaId));
 
         // Save the order
         pizzaRepository.createPizza(pizzaOrder.getPizza());
         model.addAttribute("pizzaId", pizzaOrder);
-        return "redirect:/home?pizzaId=" + pizzaId;
+        return "redirect:/home";
     }
 
     //TODO
@@ -52,7 +54,7 @@ public class OrderController {
         // Get the pizza from repository based on it's id
         return pizzaRepository.readAll().stream()
                 .filter(pizza -> pizza.getId().equals(pizzaId))
-                .findAny().orElseThrow(()-> new NoSuchElementException("Pizza not found with id: "+pizzaId));
+                .findAny().orElseThrow(()-> new PizzaNotFoundException("Pizza not found with id: "+pizzaId));
     }
 
 }

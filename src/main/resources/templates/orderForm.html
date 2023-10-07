@@ -30,7 +30,7 @@
 
     </div>
 
-    <form method="post" th:action="@{/orders}" th:object="${pizzaOrder}">
+    <form method="post" th:action="@{/orders/{id}(id=${pizzaOrder.pizza.id})}" th:object="${pizzaOrder}">
         <input type="hidden" id="pizzaId" name="pizzaId" th:value="${pizzaOrder.pizza.id}" />
 
         <div class="form-group">

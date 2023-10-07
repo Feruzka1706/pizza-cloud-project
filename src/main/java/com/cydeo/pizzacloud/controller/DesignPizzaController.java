@@ -16,8 +16,7 @@ import javax.validation.Valid;
 import java.util.UUID;
 
 @Controller
-@RequestMapping
-
+@RequestMapping("/design")
 public class DesignPizzaController {
     private final PizzaRepository pizzaRepository;
 
@@ -26,8 +25,9 @@ public class DesignPizzaController {
    }
 
 
-    @GetMapping("/design")
+    @GetMapping
     public String showDesignForm(Model model) {
+        model.addAttribute("pizza", new Pizza());
         model.addAttribute("cheeses", DataGenerator.cheeseTypeList);
         model.addAttribute("sauces", DataGenerator.sauceTypeList);
         model.addAttribute("toppings", DataGenerator.toppingTypeList);
